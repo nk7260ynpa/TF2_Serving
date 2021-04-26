@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 import tempfile
 import os 
 import tensorflow as tf
-from tf_tool import gpu_growth
-from tf_tool import hide_WARN
+from tf_tools import gpu_growth
+from tf_tools import hide_WARN
 
-gpu_growth("0")
+gpu_growth()
 hide_WARN()
 
 class TF_Serving_Model(tf.keras.Model):
