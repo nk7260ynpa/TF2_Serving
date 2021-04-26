@@ -130,3 +130,6 @@ dmypy.json
 
 
 ./*/weights/*
+TF_Model/weights/fashion_mnist/*
+*Untitled.ipynb
+*Untitled*
