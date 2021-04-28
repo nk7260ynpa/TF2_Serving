@@ -23,7 +23,7 @@ class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
 
 data = json.dumps({"signature_name": "serve", "instances": test_images[0:10].tolist()})
 headers = {"content-type": "application/json"}
-json_response = requests.post('http://localhost:8510/v1/models/random_model/versions/1:predict', data=data, headers=headers)
+json_response = requests.post('http://localhost:8510/v1/models/fashion_mnist_model/versions/1:predict', data=data, headers=headers)
 predictions = json.loads(json_response.text)['predictions']
 
 print("\nResult")
