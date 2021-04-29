@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import tempfile
 import os 
 import tensorflow as tf
+import argparse
 from tf_tools import gpu_growth
 from tf_tools import hide_WARN
 
@@ -17,10 +18,18 @@ class TF_Serving_Model(tf.keras.Model):
     def serve(self, inputs):
         return self.call(inputs)
 
-def main():
-    EPOCHS = 5
-    MODEL_DIR = "TF_Model/weights/fashion_mnist/"
-    VERSION = 1
+    
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--save_path", default="TF_Model/weights/fashion_mnist", type=str, help='Model Save path')
+    parser.add_argument("--epochs", default=5, type=int, help="Training epochs")
+    parser.add_argument("--version", default=1, type=int, help="Model Version")
+    
+    opt = parser.parse_args()
+    
+    MODEL_DIR = opt.save_path 
+    EPOCHS = opt.epochs
+    VERSION = opt.version
     
     fashion_mnist = tf.keras.datasets.fashion_mnist
     (train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
@@ -60,4 +69,5 @@ def main():
                                signatures=signatures,
                                options=None)
     
-main()
+    print("======Save complete!=======")
+    
