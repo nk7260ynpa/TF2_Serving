@@ -4,13 +4,10 @@ import numpy as np
 import tensorflow as tf
 from tf_tools import gpu_growth, hide_WARN
 import base64
+import argparse
+
 gpu_growth()
 hide_WARN()
-
-MODEL_DIR = "TF_Model/weights/flowers/"
-VERSION = 1
-BATCH_SIZE = 32
-EPOCHS = 5
 
 def load_img(img_path):
     img = tf.io.read_file(img_path)
@@ -19,14 +16,12 @@ def load_img(img_path):
     img /= 255.
     return img
 
-
-
 class TF_Serving_Model(tf.keras.Model):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
     @tf.function(input_signature=[tf.TensorSpec([], tf.string, name="images")])
-    def serve(self, inputs):
+    def serving(self, inputs):
         img = tf.io.decode_base64(inputs, name="Decode_Base64")
         img = tf.reshape(img, [])
         img = tf.image.decode_jpeg(img, channels=3, name="Decode_jpg")
@@ -36,8 +31,28 @@ class TF_Serving_Model(tf.keras.Model):
         return self.call(img)
     
     
-def main():
-    data_root = pathlib2.Path("TF_Model/data/flowers/")
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--data_path", default="TF_Model/data/flowers/", type=str, help='Data Path')
+    parser.add_argument("--save_path", default="TF_Model/weights/flowers/", type=str, help='Model Save Path')
+    parser.add_argument("--epochs", default=5, type=int, help="Training epochs")
+    parser.add_argument("--version", default=1, type=int, help="Model Version")
+    parser.add_argument("--batch_size", default=32, type=int, help="Batch Size")
+    parser.add_argument("--random_seed", default=1048596, type=int, help="This is the choice of Steins Gate.")
+    
+    opt = parser.parse_args()
+    
+    DATA_DIR = opt.data_path
+    MODEL_DIR = opt.save_path
+    EPOCHS = opt.epochs
+    VERSION = opt.version
+    BATCH_SIZE = opt.batch_size
+    RANDOM_SEED = opt.random_seed
+    
+    np.random.seed(RANDOM_SEED)
+    tf.random.set_seed(RANDOM_SEED)
+    
+    data_root = pathlib2.Path(DATA_DIR)
     class_list = {path.name:i for i, path in enumerate(data_root.glob("./*"))}
     img_path_list = [str(path) for path in data_root.glob("./*/*.jpg")]
     label_list = [float(class_list[str(path.parent.name)]) for path in data_root.glob("./*/*.jpg")]
@@ -65,7 +80,7 @@ def main():
     export_path = os.path.join(MODEL_DIR, str(VERSION))
     print("\nexport_path = {}".format(export_path))
 
-    signatures={"serve": model.serve}
+    signatures={"serving": model.serving}
 
     tf.keras.models.save_model(model,
                                export_path,
@@ -73,6 +88,5 @@ def main():
                                save_format=None,
                                signatures=signatures,
                                options=None)
-    print("complete")
+    print("======Save complete!=======")
     
-main()
