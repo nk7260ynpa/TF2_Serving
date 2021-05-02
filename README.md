@@ -14,16 +14,13 @@ Here is two tensorflow sample, one for client is with tf, the other is not.
 ## Example2(Client without tf)
 ### (1)Train Flowers Model
 #### Prepare data    
-    cd TF_Model
-    cd data
+    cd TF_Model/data
     wget https://storage.googleapis.com/download.tensorflow.org/example_images/flower_photos.tgz
     tar zxvf flower_photos.tgz
+    cd ../../
 #### Training
     python TF_Model/flowers_Train.py
 ### (2)Run Server(Don't close this terminal)
     bash Server/flowers_Server.sh
 ### (3)Run Client
     python Clients/flowers_Clients.py
-
-
-
