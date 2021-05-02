@@ -33,7 +33,7 @@ class TF_Serving_Model(tf.keras.Model):
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_path", default="TF_Model/data/flowers/", type=str, help='Data Path')
+    parser.add_argument("--data_path", default="TF_Model/data/flower_photos/", type=str, help='Data Path')
     parser.add_argument("--save_path", default="TF_Model/weights/flowers/", type=str, help='Model Save Path')
     parser.add_argument("--epochs", default=5, type=int, help="Training epochs")
     parser.add_argument("--version", default=1, type=int, help="Model Version")
